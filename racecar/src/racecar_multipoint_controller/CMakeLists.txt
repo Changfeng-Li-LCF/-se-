@@ -1,0 +1,33 @@
+cmake_minimum_required(VERSION 3.8)
+project(racecar_multipoint_controller)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+find_package(ament_cmake REQUIRED)
+find_package(nav2_regulated_pure_pursuit_controller REQUIRED)
+find_package(nav2_core REQUIRED)
+find_package(nav2_costmap_2d REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(rclcpp_lifecycle REQUIRED)
+find_package(pluginlib REQUIRED)
+find_package(nav_msgs REQUIRED)
+find_package(nav2_msgs REQUIRED)
+find_package(tf2_geometry_msgs REQUIRED)
+add_library(${PROJECT_NAME} SHARED src/controller.cpp)
+target_include_directories(${PROJECT_NAME} PRIVATE include)
+ament_target_dependencies(${PROJECT_NAME} nav2_regulated_pure_pursuit_controller
+  nav2_core nav2_costmap_2d rclcpp rclcpp_lifecycle pluginlib nav_msgs nav2_msgs tf2_geometry_msgs)
+pluginlib_export_plugin_description_file(nav2_core controller_plugin.xml)
+add_executable(test_plugin_load src/test_plugin_load.cpp)
+target_include_directories(test_plugin_load PRIVATE include)
+ament_target_dependencies(test_plugin_load pluginlib nav2_core tf2_geometry_msgs)
+install(TARGETS test_plugin_load DESTINATION lib/${PROJECT_NAME})
+install(TARGETS ${PROJECT_NAME} ARCHIVE DESTINATION lib LIBRARY DESTINATION lib RUNTIME DESTINATION bin)
+install(DIRECTORY include/ DESTINATION include)
+
+# Regression test uses the installed official Nav2 lookahead implementation.
+add_executable(test_adaptive_lookahead src/test_adaptive_lookahead.cpp)
+target_include_directories(test_adaptive_lookahead PRIVATE include)
+ament_target_dependencies(test_adaptive_lookahead nav2_regulated_pure_pursuit_controller
+  nav2_core nav2_costmap_2d rclcpp rclcpp_lifecycle nav_msgs tf2_geometry_msgs)
+
+ament_package()

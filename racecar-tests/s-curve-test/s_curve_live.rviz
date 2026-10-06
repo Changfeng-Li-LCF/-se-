@@ -1,0 +1,89 @@
+Panels:
+- Class: rviz_common/Displays
+  Name: Displays
+- Class: rviz_common/Views
+  Name: Views
+Visualization Manager:
+  Class: ''
+  Displays:
+  - Class: rviz_default_plugins/Grid
+    Name: Grid
+    Enabled: true
+    Value: true
+    Cell Size: 0.5
+    Plane Cell Count: 30
+    Color: 100; 100; 100
+    Reference Frame: <Fixed Frame>
+  - Class: rviz_default_plugins/Path
+    Name: Target path (blue)
+    Enabled: true
+    Value: true
+    Alpha: 1.0
+    Color: 50; 150; 255
+    Line Style: Billboards
+    Line Width: 0.025
+    Buffer Length: 1
+    Pose Style: None
+    Topic:
+      Value: /s_curve/target_path
+      Depth: 1
+      Durability Policy: Transient Local
+      History Policy: Keep Last
+      Reliability Policy: Reliable
+  - Class: rviz_default_plugins/Path
+    Name: Actual odom path (orange)
+    Enabled: true
+    Value: true
+    Alpha: 1.0
+    Color: 255; 140; 30
+    Line Style: Billboards
+    Line Width: 0.035
+    Buffer Length: 1
+    Pose Style: None
+    Topic:
+      Value: /s_curve/actual_path
+      Depth: 1
+      Durability Policy: Transient Local
+      History Policy: Keep Last
+      Reliability Policy: Reliable
+  - Class: rviz_default_plugins/Marker
+    Name: Run and status
+    Enabled: true
+    Value: true
+    Topic:
+      Value: /s_curve/status
+      Depth: 1
+      Durability Policy: Transient Local
+      History Policy: Keep Last
+      Reliability Policy: Reliable
+  Enabled: true
+  Global Options:
+    Background Color: 48; 48; 48
+    Fixed Frame: s_curve_view
+    Frame Rate: 15
+  Name: root
+  Tools:
+  - Class: rviz_default_plugins/MoveCamera
+  - Class: rviz_default_plugins/Select
+  - Class: rviz_default_plugins/Measure
+  Transformation:
+    Current:
+      Class: rviz_default_plugins/TF
+  Value: true
+  Views:
+    Current:
+      Class: rviz_default_plugins/TopDownOrtho
+      Name: Current View
+      Scale: 100
+      Angle: 0
+      Target Frame: <Fixed Frame>
+      X: 2.4
+      Y: 0.3
+    Saved: null
+Window Geometry:
+  Width: 1100
+  Height: 760
+  X: 80
+  Y: 60
+  Hide Left Dock: false
+  Hide Right Dock: false

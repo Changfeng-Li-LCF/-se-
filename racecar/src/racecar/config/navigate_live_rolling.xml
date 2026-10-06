@@ -1,0 +1,41 @@
+<!-- Commit a candidate goal and path only after the planner succeeds.
+     Freeze each candidate before starting the asynchronous action. A newer
+     message received during planning must not be committed with the old path.
+     A rejected candidate falls back to freshly planning the last accepted goal;
+     if that route is also invalid, or tracking fails, the task stops normally. -->
+<root main_tree_to_execute="MainTree">
+  <BehaviorTree ID="MainTree">
+    <Sequence name="InitializeRollingNavigation">
+      <SetBlackboard output_key="accepted_goal" value="{goal}"/>
+      <PipelineSequence name="RollingGoalNavigation">
+        <PromptGoalUpdater hz="10.0" input_goal="{goal}" output_goal="{candidate_goal}">
+          <Fallback name="CandidateOrAcceptedGoal">
+            <Sequence name="PlanThenCommitCandidate">
+              <GoalRequestAllowed candidate_goal="{candidate_goal}" rejected_goal="{last_rejected_goal}"/>
+              <PreferDirectGoal goal="{candidate_goal}" preferred_goal="{preferred_goal}" robot_base_frame="base_footprint"/>
+              <Fallback name="SelectedApproachThenDirectHeading">
+                <Sequence>
+                  <ComputePathToPose goal="{candidate_goal}" path="{candidate_path}" planner_id="GridBased"/>
+                  <SetBlackboard output_key="path" value="{candidate_path}"/>
+                  <SetBlackboard output_key="accepted_goal" value="{candidate_goal}"/>
+                </Sequence>
+                <Sequence>
+                  <GoalHeadingDifferent first="{preferred_goal}" second="{candidate_goal}"/>
+                  <ComputePathToPose goal="{preferred_goal}" path="{candidate_path}" planner_id="GridBased"/>
+                  <SetBlackboard output_key="path" value="{candidate_path}"/>
+                  <SetBlackboard output_key="accepted_goal" value="{preferred_goal}"/>
+                </Sequence>
+              </Fallback>
+              <ReportRollingGoal status="accepted" requested_goal="{candidate_goal}" accepted_goal="{accepted_goal}"/>
+            </Sequence>
+            <Sequence name="RejectCandidateAndKeepAcceptedGoal">
+              <ReportRollingGoal status="rejected" requested_goal="{candidate_goal}" rejected_goal="{last_rejected_goal}"/>
+              <ComputePathToPose goal="{accepted_goal}" path="{path}" planner_id="GridBased"/>
+            </Sequence>
+          </Fallback>
+        </PromptGoalUpdater>
+        <FollowPath path="{path}" controller_id="FollowPath" goal_checker_id="goal_checker"/>
+      </PipelineSequence>
+    </Sequence>
+  </BehaviorTree>
+</root>

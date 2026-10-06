@@ -1,0 +1,105 @@
+# 实车调试配置；舵机 PWM 端点依据用户观察，实际前轮角度及车速映射仍待标定。
+# 修改这里后运行 ~/racecar-control-fix-20260925/apply_trial_profile.py 同步，再重启 explorer.sh。
+racecar_driver:
+  ros__parameters:
+    # 兼容现有驱动的启用开关：true 表示允许采用下面的试运行参数。
+    calibration_confirmed: true
+    dry_run: false
+    # 已实测：前后轴距 24.8 cm；左右轮距约 23.8 cm（不直接代入此模型）。
+    wheelbase_m: 0.248
+    # 用户指定左右角度限幅 30°；仍是暂定等效前轮角度，需实测标定。
+    # 软件将 ±30° 映射至下方 PWM 端点；不代表真实前轮已测得 ±30°。
+    left_angle_deg: 30.0
+    right_angle_deg: 30.0
+    # 用户标定中值 1489；PWM 增大向左。
+    # 用户指定中值两侧各 230 PWM；实际前轮角度待测。
+    servo_center_pwm: 1489.0
+    servo_left_pwm: 1719.0
+    servo_right_pwm: 1259.0
+    # 1500 停车已确认；电机 PWM 上限由 motor_max_pwm 统一限制所有控制场景。
+    # min=neutral 禁止倒车。不可直接套用舵机的 PWM 范围到电机。
+    motor_neutral_pwm: 1500.0
+    motor_min_pwm: 1500.0
+    motor_max_pwm: 1570.0
+    # 暂定比例：0.20 m/s 指令映射到 1550。实际车速仍需测量，不保证等于指令。
+    forward_pwm_per_mps: 250.0
+    reverse_pwm_per_mps: 250.0
+    # Linear commands are capped at max_speed_mps in every driving mode.
+    speed_limit_enabled: true
+    max_speed_mps: 2.0
+    speed_epsilon_mps: 0.01
+    command_timeout_s: 0.5
+    control_frequency_hz: 100.0
+    # 正常停车直接输出 1100 PWM；按触发时反馈速度锁定反刹最低时间，从输出开始计时，最长 2 秒。
+    # 只有明确启用时，刹车阶段才允许低于正常行驶的 motor_min_pwm。
+    reverse_brake_enabled: true
+    brake_pwm: 1100.0
+    brake_duration_s: 2.0
+    brake_min_duration_s: 1.0
+    brake_min_duration_speed_enabled: true
+    brake_min_speed_reference_mps: 1.5
+    brake_min_duration_reference_s: 1.2
+    brake_min_duration_speed_gain_s_per_mps: 3.0
+    brake_stop_speed_mps: 0.03
+    brake_stop_confirm_s: 0.15
+
+    # 车速闭环使用独立连续雷达扫描相对运动；转弯角速度闭环使用下面配置的 IMU。
+    # 所有驾驶入口共用；键盘旧 PWM 请求按上方换算系数解释为目标速度。
+    speed_feedback_enabled: true
+    # Shared cruise ceiling; navigation may request lower turning/obstacle speeds.
+    speed_setpoint_mps: 2.0
+    yaw_rate_feedback_enabled: true
+    feedback_odom_topics: ['/scan_motion_feedback']
+    # Residual/geometry quality travels in the same stamped Odometry message.
+    feedback_covariance_quality_enabled: true
+    feedback_max_velocity_variance_mps2: 0.25
+    feedback_base_frame: base_footprint
+    feedback_timeout_s: 0.30
+    feedback_filter_tau_s: 0.08
+    feedback_max_speed_mps: 2.5  # Session /odom speed-magnitude rejection threshold; not a target-speed cap.
+    feedback_max_yaw_rate_radps: 6.0
+    # 反馈可信度与过期独立；异常时不追加油门，恢复后继续闭环。
+    speed_feedback_confidence_enabled: true
+    feedback_lateral_noise_mps: 0.20
+    feedback_lateral_ratio: 0.35
+    # /odom 已表示 base_footprint 的速度；传感器 TF 偏移不能再次作为横向余量。
+    # 后轴到该参考点的偏移未标定，关闭按角速度额外放宽，保留噪声/比例容差。
+    feedback_turn_lever_arm_m: 0.0
+    feedback_confidence_recovery_s: 0.15
+    # 初始 PI 增益，尚未实车调定。普通反馈修正不会输出反向刹车 PWM。
+    motor_kp: 20.0
+    motor_ki: 10.0
+    # Legacy feedforward PI fields retained for compatibility; incremental motor PI does not use them.
+    motor_integral_limit_pwm: 50.0
+    motor_correction_limit_pwm: 75.0
+    # PWM slew, not an m/s acceleration limiter; explicit stop/brake bypasses this.
+    motor_pwm_rise_rate_per_s: 200.0
+    motor_pwm_fall_rate_per_s: 200.0
+    motor_startup_pwm_rise_rate_per_s: 300.0
+    # Initial startup settings based on observed 1530/1550 behavior; not physically tuned.
+    motor_startup_pwm: 1560.0
+    motor_startup_timeout_s: 1.5
+    motor_startup_motion_mps: 0.08
+    motor_startup_confirm_s: 0.15
+    # IMU yaw correction: proportional only for initial deployment.
+    yaw_kp_deg_per_radps: 6.0
+    yaw_ki_deg_per_rad: 0.0
+    yaw_integral_limit_deg: 5.0
+    yaw_correction_limit_deg: 3.0
+    yaw_feedback_min_speed_mps: 0.03
+
+    # Direct gyro yaw feedback; sensor +Z assumed body +Z from manual turn test.
+    # No TF lookup: this explicitly records the unverified mounting assumption.
+    imu_yaw_feedback_enabled: true
+    imu_feedback_topic: /IMU_data
+    imu_feedback_frame: IMU_link
+    imu_yaw_axis: [0.0, 0.0, 1.0]
+    # Static recording 20260927_221326; subtracted after axis projection.
+    imu_yaw_bias_radps: -0.0005038330941049168
+    imu_feedback_timeout_s: 0.15
+    imu_filter_tau_s: 0.02
+    imu_max_yaw_rate_radps: 6.0
+
+    # Guard sends a fresh clearance heartbeat; missing/false clearance blocks motion.
+    map_boundary_guard_enabled: false
+    map_boundary_guard_timeout_s: 0.5

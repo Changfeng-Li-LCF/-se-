@@ -1,0 +1,104 @@
+{
+  "frame": "map",
+  "map_yaml": "/home/bianbu/maps/explore_20260930_181005/map_localization.yaml",
+  "goals": [
+    {
+      "label": "2",
+      "x": 9.149991197146834,
+      "y": 1.6055580489982526,
+      "yaw": 0.0
+    },
+    {
+      "label": "3",
+      "x": 12.1,
+      "y": -0.45,
+      "yaw": 0.0
+    },
+    {
+      "label": "right-side-guide",
+      "x": 13.35,
+      "y": 0.65,
+      "yaw": 1.5707963267948966
+    },
+    {
+      "label": "4",
+      "x": 12.1,
+      "y": 1.8,
+      "yaw": 3.141592653589793
+    },
+    {
+      "label": "5",
+      "x": 9.15,
+      "y": -0.5,
+      "yaw": 3.141592653589793
+    },
+    {
+      "label": "return-corridor-guide",
+      "x": 5.4,
+      "y": -0.65,
+      "yaw": 3.141592653589793
+    },
+    {
+      "label": "6",
+      "x": 0.2,
+      "y": -0.05,
+      "yaw": 3.141592653589793
+    }
+  ],
+  "display_targets": [
+    {
+      "label": "1",
+      "x": 0.2,
+      "y": 0.85,
+      "yaw": 0.0
+    },
+    {
+      "label": "2",
+      "x": 9.149991197146834,
+      "y": 1.6055580489982526,
+      "yaw": 0.0
+    },
+    {
+      "label": "3",
+      "x": 12.1,
+      "y": -0.45,
+      "yaw": 0.0
+    },
+    {
+      "label": "4",
+      "x": 12.1,
+      "y": 1.8,
+      "yaw": 3.141592653589793
+    },
+    {
+      "label": "5",
+      "x": 9.15,
+      "y": -0.5,
+      "yaw": 3.141592653589793
+    },
+    {
+      "label": "6",
+      "x": 0.2,
+      "y": -0.05,
+      "yaw": 3.141592653589793
+    }
+  ],
+  "initial_prior": {
+    "x": -0.29017601921209485,
+    "y": 0.7321314942183643,
+    "yaw": 0.0013319642738057952
+  },
+  "repeat": false,
+  "route_order": [
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6"
+  ],
+  "point_1_role": "departure area; start at actual localized pose",
+  "intermediate_behavior": "continuous pass-through; no waypoint wait",
+  "terminal_behavior": "stop at point 6 heading left",
+  "terminal_approach_distance_m": 1.0
+}

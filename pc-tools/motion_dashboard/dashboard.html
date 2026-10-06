@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>小车运动数据</title>
+<style>
+:root{color-scheme:light;--ink:#163254;--muted:#70829a;--line:#e2eaf3;--blue:#1684ff;--orange:#fa861c}
+*{box-sizing:border-box}body{margin:0;background:#f5f8fc;color:var(--ink);font:14px "Microsoft YaHei","Segoe UI",sans-serif}
+main{max-width:1660px;margin:auto;padding:24px}header{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+h1{margin:0;font-size:30px;letter-spacing:-1px}.badge{font-size:12px;padding:7px 10px;background:#e2f5ee;color:#167451;border-radius:7px;margin-left:12px;vertical-align:middle}
+.actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}select,button{background:white;border:1px solid #cbd9ea;border-radius:8px;padding:10px 12px;color:var(--ink);font:inherit;cursor:pointer}button:hover{border-color:var(--blue);color:var(--blue)}
+.sub{color:var(--muted);margin:10px 0 20px;line-height:1.7;overflow-wrap:anywhere}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:18px}
+.stat,.card{background:white;border:1px solid var(--line);border-radius:14px;box-shadow:0 4px 18px #233b5604}.stat{padding:20px}.stat label{display:block;color:var(--muted)}.stat strong{display:block;font-size:30px;margin-top:7px;font-variant-numeric:tabular-nums}.stat small{display:block;margin-top:5px;color:var(--muted);font-size:11px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px}.row.hero{grid-template-columns:1.55fr 1fr}.card{min-width:0;overflow:hidden}.card h2{font-size:18px;margin:18px 20px 0}.hint{margin:6px 20px 0;font-size:12px;color:var(--muted)}.chart{height:310px}.hero .chart{height:380px}
+.notice{display:none;border:1px solid #f0d29a;background:#fff7e8;color:#85591e;padding:12px 16px;margin-bottom:18px;border-radius:9px;white-space:pre-line}
+details{background:white;border:1px solid var(--line);padding:16px 20px;border-radius:12px;margin-top:12px}summary{cursor:pointer;font-weight:600}li{color:#62758b;line-height:1.8}footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:12px;margin:16px 0}.tag{color:#1684ff}
+@media(max-width:960px){.row.hero,.row{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}main{padding:14px}h1{font-size:24px}select{max-width:95vw}.stat strong{font-size:26px}}
+@media print{button,.actions,.modebar{display:none}.row.hero,.row{grid-template-columns:1fr 1fr}.card{break-inside:avoid}}
+</style>
+<script>/*__PLOTLY__*/</script></head><body><main>
+<header><h1>小车运动数据<span class="badge" id="badge">实车记录</span></h1><div class="actions"><select id="run" aria-label="选择已保存运行"></select><button id="reset">复位全部图表</button><button id="export">导出数据 CSV</button><button id="exportImu">导出 IMU CSV</button></div></header>
+<div class="sub" id="subtitle"></div><div id="warnings" class="notice"></div>
+<div class="stats">
+<div class="stat"><label>最高反馈速度</label><strong id="peak">—</strong><small id="peakNote">仅统计有效激活反馈</small></div>
+<div class="stat"><label>平均反馈速度</label><strong id="mean">—</strong><small id="meanNote">时间加权，不含无效反馈</small></div>
+<div class="stat"><label>最大路径偏差</label><strong id="deviation">—</strong><small>激活时段内 · 最近路径线段距离</small></div>
+<div class="stat"><label>控制任务时长</label><strong id="duration">—</strong><small>任务开始至结果返回</small></div>
+</div>
+<div class="row hero">
+<section class="card"><h2>速度变化</h2><p class="hint">拖动框选放大 · 滚轮缩放 · 底部滑块选择时段 · 时间图联动</p><div id="speed" class="chart"></div></section>
+<section class="card"><h2>路径对比</h2><p class="hint">蓝虚线：目标　橙：闭环激活轨迹　灰：其他时段<br>悬停轨迹点可查看三种角度；蓝箭头为车头方向。车头角与移动方向共用图中坐标，IMU 航向保留原始参考系。</p><div id="path" class="chart"></div></section>
+</div>
+<div class="row">
+<section class="card"><h2>舵机 PWM 指令</h2><p class="hint">驱动成功发送的指令；没有实际舵角反馈</p><div id="servo" class="chart"></div></section>
+<section class="card"><h2>车身转弯角速度</h2><p class="hint" id="yawHint">目标值与反馈值</p><div id="yaw" class="chart"></div></section>
+</div>
+<div class="row">
+<section class="card"><h2>电机 PWM 输出</h2><p class="hint">包含起步、正常驱动和停车制动阶段</p><div id="motor" class="chart"></div></section>
+<section class="card"><h2>路径偏差随时间变化</h2><p class="hint">左正右负；灰色为非激活时段，不计入顶部偏差统计</p><div id="error" class="chart"></div></section>
+</div>
+<section class="card"><h2>转向角指令与闭环修正</h2><p class="hint">用于区分基础转向要求与闭环补偿；均非实测舵角</p><div id="angle" class="chart"></div></section>
+<div class="row" style="margin-top:18px">
+<section class="card"><h2>原始陀螺仪数据</h2><p class="hint">IMU 消息的 X / Y / Z 轴角速度，未套用驱动滤波</p><div id="gyro" class="chart"></div></section>
+<section class="card"><h2>IMU 输出航向角</h2><p class="hint">来自姿态四元数；传感器参考系，±180°处折返；不是前轮转角</p><div id="imuHeading" class="chart"></div></section>
+</div>
+<details><summary>统计口径与本次参数</summary><ul id="notes"></ul><p class="sub" id="parameters"></p></details>
+<footer><span>双击图表复位 · 单击图例隐藏曲线 · 图表右上角相机可导出 PNG</span><span>本页可离线打开 · 刷新数据请重新点击桌面脚本</span></footer>
+</main>
+<script>
+const DATA=/*__DATA__*/;
+const ids=['speed','servo','yaw','motor','error','angle','gyro','imuHeading'];
+const blue='#1684ff',orange='#fa861c',purple='#8b6ed4';let current=null,syncing=false;
+const outcomes={succeeded:'已完成',stopped:'已停止',failed_preflight:'未启动'};
+const fmt=(v,n=2)=>Number.isFinite(v)?v.toFixed(n):'—';
+const config={responsive:true,scrollZoom:true,displaylogo:false,toImageButtonOptions:{format:'png',scale:2},modeBarButtonsToRemove:['lasso2d','select2d'],doubleClick:'reset'};
+function base(y){return {paper_bgcolor:'white',plot_bgcolor:'white',font:{family:'Microsoft YaHei, Segoe UI, sans-serif',color:'#526984',size:12},margin:{l:62,r:22,t:38,b:48},hovermode:'x unified',dragmode:'zoom',legend:{orientation:'h',x:0,y:1.18,font:{size:12}},xaxis:{title:{text:'时间 / s',standoff:7},gridcolor:'#eaf0f6',zerolinecolor:'#c4d2e1',ticksuffix:'',tickformat:'.1f'},yaxis:{title:{text:y,standoff:8},gridcolor:'#eaf0f6',zerolinecolor:'#bccbdc'},hoverlabel:{bgcolor:'white',font:{size:12}},showlegend:true};}
+function line(x,y,name,color,dash='solid',shape='linear'){return {x,y,name,type:'scatter',mode:'lines',connectgaps:false,line:{color,width:2,dash,shape},hovertemplate:'%{y:.3f}<extra>%{fullData.name}</extra>'};}
+function level(y,label,color='#a6b3c4'){return {type:'line',xref:'paper',x0:0,x1:1,y0:y,y1:y,line:{color,width:1,dash:'dot'}};}
+function draw(id,traces,layout){return Plotly.react(id,traces,layout,config);}
+function set(id,text){document.getElementById(id).textContent=text;}
+async function render(index){
+ document.getElementById('run').disabled=true;syncing=true;
+ current=DATA[index];const d=current,s=d.series,p=d.path,st=d.stats,imu=d.imu||{t:[],wx:[],wy:[],wz:[],yaw_deg:[]};
+ document.getElementById('exportImu').disabled=!imu.t.some(Number.isFinite);
+ set('badge',outcomes[d.outcome]||d.outcome);set('subtitle',d.run_id+'  ·  '+(d.finished||'')+'  ·  '+st.samples+' 个闭环样本 / '+st.pose_samples+' 个定位点  ·  诊断采样约 '+fmt(st.diagnostic_hz,1)+' Hz');
+ set('peak',fmt(st.max_speed)+' m/s');set('mean',fmt(st.mean_speed)+' m/s');set('deviation',fmt(st.max_error,3)+' m');set('duration',fmt(st.action_duration_s,1)+' s');
+ set('peakNote','采样峰值出现在 '+fmt(st.peak_t,2)+' s');set('meanNote','有效连续时段 '+fmt(st.speed_coverage_s,1)+' s · 时间加权');
+ const w=document.getElementById('warnings');w.textContent=[...d.warnings,...(d.reason?['结束原因：'+d.reason]:[])].join('\n');w.style.display=w.textContent?'block':'none';
+ const notes=document.getElementById('notes');notes.replaceChildren();d.notes.forEach(n=>{const li=document.createElement('li');li.textContent=n;notes.append(li)});
+ const drv=d.driver;set('parameters','电机 PWM 上限 '+(drv.motor_max_pwm??'—')+'　舵机中值 '+(drv.servo_center_pwm??'—')+'　电机 Kp / Ki '+(drv.motor_kp??'—')+' / '+(drv.motor_ki??'—')+'　转向 Kp / Ki '+(drv.yaw_kp_deg_per_radps??'—')+' / '+(drv.yaw_ki_deg_per_rad??'—')+'\n源记录：'+d.source);
+ set('yawHint',drv.imu_yaw_feedback_enabled?'反馈来自 IMU 的车身转弯角速度':'反馈来自里程计的车身转弯角速度');
+ const speed=base('速度 / m/s');speed.xaxis.rangeslider={visible:true,thickness:.13,bgcolor:'#f1f6fc',bordercolor:'#cedded',borderwidth:1};speed.margin.b=32;
+ const traces=[line(s.t,s.target_v,'目标速度',blue,'dash'),line(s.t,s.measured_v,'反馈速度',orange)];
+ if(st.max_speed!==null)traces.push({x:[st.peak_t],y:[st.max_speed],type:'scatter',mode:'markers',name:'有效反馈峰值',marker:{color:orange,size:9,line:{color:'white',width:2}},hovertemplate:'峰值 %{y:.3f} m/s<extra></extra>'});
+ const path=base('Y / m');path.xaxis={title:'X / m',gridcolor:'#eaf0f6',zerolinecolor:'#c4d2e1',constrain:'domain'};path.yaxis={title:'Y / m',gridcolor:'#eaf0f6',scaleanchor:'x',scaleratio:1,zerolinecolor:'#c4d2e1'};path.hovermode='closest';path.legend.y=1.14;
+ const moving=i=>p.t[i]!==null&&st.active_span_s!==null&&p.t[i]>=0&&p.t[i]<=st.active_span_s;
+ const pathTrace=[line(p.target.map(v=>v[0]),p.target.map(v=>v[1]),'目标路径',blue,'dash'),line(p.actual.map((v,i)=>moving(i)?v[0]:null),p.actual.map((v,i)=>moving(i)?v[1]:null),'激活轨迹',orange),line(p.actual.map((v,i)=>!moving(i)?v[0]:null),p.actual.map((v,i)=>!moving(i)?v[1]:null),'其他时段','#a4afbd')];
+ const angleText=v=>Number.isFinite(v)?v.toFixed(1)+'°':'无数据';
+ const pathHover=p.t.map((t,i)=>[t,angleText(p.heading_deg?.[i]),angleText(p.imu_yaw_deg?.[i]),angleText(p.motion_deg?.[i]),Number.isFinite(p.imu_dt_s?.[i])?(p.imu_dt_s[i]*1000).toFixed(1)+' ms':'无数据']);
+ const pointHover='X %{x:.3f} m · Y %{y:.3f} m<br>时间 %{customdata[0]:.2f} s<br>车头角（图中坐标）：%{customdata[1]}<br>IMU 航向角（原始参考系）：%{customdata[2]}<br>轨迹移动方向角：%{customdata[3]}<br>IMU 匹配时间差：%{customdata[4]}';
+ pathTrace[0].hovertemplate='X %{x:.3f} m<br>Y %{y:.3f} m<br>目标参考点，无对应实测角度<extra>目标路径</extra>';
+ for(const [index,label,color] of [[1,'定位轨迹',orange],[2,'非激活时段定位','#a4afbd']]){
+  pathTrace[index].customdata=pathHover;pathTrace[index].hovertemplate=pointHover+'<extra>'+label+'</extra>';
+  pathTrace[index].mode='lines+markers';pathTrace[index].marker={size:3,color};
+ }
+ if(p.target.length)pathTrace.push({x:[p.target[0][0]],y:[p.target[0][1]],name:'参考起点',type:'scatter',mode:'markers',marker:{color:'#18a568',size:8}});
+ const heads=p.headings||[],arrowX=[],arrowY=[];
+ heads.forEach(h=>{
+  const a=h.yaw_deg*Math.PI/180,L=.32,W=.09;
+  const tx=h.x+L*Math.cos(a),ty=h.y+L*Math.sin(a);
+  arrowX.push(h.x,tx,null,tx-W*Math.cos(a-.55),tx,tx-W*Math.cos(a+.55),null);
+  arrowY.push(h.y,ty,null,ty-W*Math.sin(a-.55),ty,ty-W*Math.sin(a+.55),null);
+ });
+ pathTrace.push({...line(arrowX,arrowY,'估计车头方向',blue),legendgroup:'heading',hoverinfo:'skip',hovertemplate:null});
+ pathTrace.push({x:heads.map(h=>h.x),y:heads.map(h=>h.y),customdata:heads.map(h=>pathHover[h.path_index]||[h.t,angleText(h.yaw_deg),'无数据','无数据','无数据']),name:'车头采样点',legendgroup:'heading',showlegend:false,type:'scatter',mode:'markers',marker:{color:blue,size:4},hovertemplate:pointHover+'<extra>定位估计方向</extra>'});
+ const servo=base('PWM');servo.shapes=Number.isFinite(drv.servo_center_pwm)?[level(drv.servo_center_pwm)]:[];
+ const motor=base('PWM');motor.shapes=[drv.motor_neutral_pwm,drv.motor_max_pwm].filter(Number.isFinite).map(v=>level(v));
+ const gyroLayout=base('角速度 / rad/s'),imuLayout=base('航向角 / °');
+ for(const [layout,available] of [[gyroLayout,imu.wx.some(Number.isFinite)||imu.wy.some(Number.isFinite)||imu.wz.some(Number.isFinite)],[imuLayout,imu.yaw_deg.some(Number.isFinite)]]){
+  if(!available)layout.annotations=[{xref:'paper',yref:'paper',x:.5,y:.5,text:'该记录未提供有效 IMU 数据',showarrow:false}];
+ }
+ await Promise.all([draw('speed',traces,speed),draw('path',pathTrace,path),draw('servo',[line(s.t,s.servo_pwm,'舵机 PWM',orange,'solid','hv')],servo),draw('yaw',[line(s.t,s.target_w,'目标角速度',blue,'dash'),line(s.t,s.measured_w,'反馈角速度',orange)],base('角速度 / rad/s')),draw('motor',[line(s.t,s.motor_pwm,'电机 PWM',orange,'solid','hv')],motor),draw('error',[line(p.t,p.error.map((v,i)=>moving(i)?v:null),'激活时段偏差',purple),line(p.t,p.error.map((v,i)=>!moving(i)?v:null),'其他时段','#a4afbd')],base('偏差 / m')),draw('angle',[line(s.t,s.base_angle,'基础转向角',blue),line(s.t,s.correction,'闭环修正角',purple)],base('角度 / °')),draw('gyro',[line(imu.t,imu.wx,'陀螺仪 X','#98a7b8'),line(imu.t,imu.wy,'陀螺仪 Y',purple),line(imu.t,imu.wz,'陀螺仪 Z',blue)],gyroLayout),draw('imuHeading',[line(imu.t,imu.yaw_deg,'IMU 航向角',blue)],imuLayout)]).finally(()=>{document.getElementById('run').disabled=false;syncing=false});
+ document.body.dataset.renderedRun=d.run_id;
+}
+function zoomSync(event){
+ if(syncing)return;
+ let update;
+ if(event['xaxis.autorange'])update={'xaxis.autorange':true};
+ else if(event['xaxis.range'])update={'xaxis.range':event['xaxis.range']};
+ else if(event['xaxis.range[0]']!==undefined&&event['xaxis.range[1]']!==undefined)update={'xaxis.range':[event['xaxis.range[0]'],event['xaxis.range[1]']]};
+ if(!update)return;
+ syncing=true;Promise.all(ids.map(id=>Plotly.relayout(id,update))).finally(()=>syncing=false);
+}
+const select=document.getElementById('run');DATA.forEach((d,i)=>{const opt=document.createElement('option');opt.value=i;opt.textContent=d.run_id.replace('s-curve-','')+' · '+(outcomes[d.outcome]||d.outcome);select.append(opt)});
+select.onchange=()=>render(Number(select.value));
+document.getElementById('reset').onclick=()=>{syncing=true;Promise.all([...ids,'path'].map(id=>Plotly.relayout(id,{'xaxis.autorange':true,'yaxis.autorange':true}))).finally(()=>syncing=false)};
+document.getElementById('export').onclick=()=>{const s=current.series,keys=Object.keys(s);const text='\ufeff'+keys.join(',')+'\r\n'+s.t.map((t,i)=>t===null?null:keys.map(k=>s[k][i]??'').join(',')).filter(v=>v!==null).join('\r\n');const url=URL.createObjectURL(new Blob([text],{type:'text/csv;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download=current.run_id+'-motion.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)};
+document.getElementById('exportImu').onclick=()=>{const s=current.imu;if(!s)return;const keys=['t','wx','wy','wz','yaw_deg'];const text='\ufeff'+keys.join(',')+'\r\n'+s.t.map((t,i)=>t===null?null:keys.map(k=>s[k][i]??'').join(',')).filter(v=>v!==null).join('\r\n');const url=URL.createObjectURL(new Blob([text],{type:'text/csv;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download=current.run_id+'-imu.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)};
+render(0).then(()=>ids.forEach(id=>document.getElementById(id).on('plotly_relayout',zoomSync))).catch(e=>{const box=document.getElementById('warnings');box.style.display='block';box.textContent='图表加载失败：'+e.message});
+</script></body></html>

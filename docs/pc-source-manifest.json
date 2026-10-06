@@ -1,0 +1,330 @@
+{
+  "snapshot_time": "2026-10-06T14:50:54.057015+08:00",
+  "files": [
+    {
+      "path": "pc-tools/analyze-driving-log.py",
+      "bytes": 1579,
+      "sha256": "1423e90a45ef24fc0c275603761a0272da871b71da4c362e28ffd0b4f0c710d3"
+    },
+    {
+      "path": "pc-tools/apply-servo-endpoints-1750.py",
+      "bytes": 2183,
+      "sha256": "110c9aa6e7c986cd8062f78936259cae1f5203d903823b0aea62de2b79094cbd"
+    },
+    {
+      "path": "pc-tools/car-rviz-relay.py",
+      "bytes": 3734,
+      "sha256": "aaca166e42aa35732d1127ba9411fb0bd11a0c2e304af3d57bf4f7a6aa0bb304"
+    },
+    {
+      "path": "pc-tools/check-rviz-data.py",
+      "bytes": 2769,
+      "sha256": "a859abd9255b9716f6bd13fd4f18390d453dde4459333ffb579048119aafe77a"
+    },
+    {
+      "path": "pc-tools/command_menu/backend.py",
+      "bytes": 7495,
+      "sha256": "087e64affd1a5317c47ea6d72b0558f8ab6df531edd8a699aa9ba01a82420039"
+    },
+    {
+      "path": "pc-tools/command_menu/catalog.py",
+      "bytes": 4420,
+      "sha256": "76f76dbdb8f2a664341070b1ce8e4e01f6674b32558d44c01543f574edd4e8d8"
+    },
+    {
+      "path": "pc-tools/command_menu/launch.ps1",
+      "bytes": 383,
+      "sha256": "11ae8566e5c1a92f82863ad3c0e6f2379d068183f828987ad41475ac70638b30"
+    },
+    {
+      "path": "pc-tools/command_menu/menu.py",
+      "bytes": 9568,
+      "sha256": "a7a3a6c07df30192ef4dfd47f06c0623a5afbb7c5d4972e53b0cda0e7462f927"
+    },
+    {
+      "path": "pc-tools/command_menu/payload/dispatch.py",
+      "bytes": 13371,
+      "sha256": "67a134ebe04c4c01c20c961369914504672af4105dde6a47e35b541c16a8bbda"
+    },
+    {
+      "path": "pc-tools/command_menu/payload/references/figure8.json",
+      "bytes": 352659,
+      "sha256": "2eab7bf8a34fcaa80a9feb397b247aa5ba2bc5ea2b4598bd29e68d8e42c166cd"
+    },
+    {
+      "path": "pc-tools/command_menu/payload/references/s_curve.json",
+      "bytes": 47901,
+      "sha256": "ebafd3ff20ee358777e4e72c0add06e1fcead5a39a7ff84ee872c4d15c344160"
+    },
+    {
+      "path": "pc-tools/command_menu/payload/remote.sh",
+      "bytes": 160,
+      "sha256": "1c5576668fa665db2d20f90c7a682e064a18e4e1cf72c51517e48bad5d41ebab"
+    },
+    {
+      "path": "pc-tools/command_menu/README.md",
+      "bytes": 3141,
+      "sha256": "3c956207256159d9c12be4a63de67f713ac586e0ac13c78d2c92edcaeac22bcd"
+    },
+    {
+      "path": "pc-tools/command_menu/settings.json",
+      "bytes": 66,
+      "sha256": "b43c5ae6516b3658aa4c305bd378d815a37da48e3fdac3597b04d41f639b145d"
+    },
+    {
+      "path": "pc-tools/command_menu/test_backend.py",
+      "bytes": 3403,
+      "sha256": "14672d5da8f8a91bd8f5441639047ed49e3969db904bb6da79fd9a959409cf0b"
+    },
+    {
+      "path": "pc-tools/command_menu/test_payload.py",
+      "bytes": 2158,
+      "sha256": "1c82bbe3b8d69396e05172288e25bb27a34485d412560c7c5b62f6190c8cbf94"
+    },
+    {
+      "path": "pc-tools/configure-car-headless.py",
+      "bytes": 6680,
+      "sha256": "4c1a533c15fd235e0db1ca76303461c4dda9504538a6dd068d282033c0a601e5"
+    },
+    {
+      "path": "pc-tools/configure-fastdds.py",
+      "bytes": 2199,
+      "sha256": "857ca25affc0a9531906a69985efc1b9eee7ff35f298a5406496d2c1e844d778"
+    },
+    {
+      "path": "pc-tools/create-local-rviz-shortcut.ps1",
+      "bytes": 600,
+      "sha256": "3594bbcd57575c217b3f56a46c9a465ad6808784bdd332c8b1b73ea9322f238c"
+    },
+    {
+      "path": "pc-tools/enable-racecar-firewall.ps1",
+      "bytes": 1040,
+      "sha256": "7cd577aeb937e62c7e33f55836a8a6e909c8fb12d0e193452308ea56d28e6abd"
+    },
+    {
+      "path": "pc-tools/inspect-navigation-display.py",
+      "bytes": 1603,
+      "sha256": "c06a89b717d8bc7bd4ef5e089015f9779d465f32e4f09dfbe5854ea3493fb57b"
+    },
+    {
+      "path": "pc-tools/install-rviz-entrypoints.py",
+      "bytes": 3947,
+      "sha256": "595d073403da643b122a7bd0b959ca8137df5ac9365258b579a29dee38c3b000"
+    },
+    {
+      "path": "pc-tools/install-rviz-relay.py",
+      "bytes": 4278,
+      "sha256": "94449dbcb76808f7af0fa4264f4bc24d0121821d2f0b23c4392a0b419febd8b1"
+    },
+    {
+      "path": "pc-tools/labelimg-launch.py",
+      "bytes": 281,
+      "sha256": "22fab656e7353b3ba972d7f84ab20f5e7f0ea6490fd78856b1bd168621373125"
+    },
+    {
+      "path": "pc-tools/marked_route_report/build.py",
+      "bytes": 12716,
+      "sha256": "606ee7d173cb00ce723bb43b0e9904d2b63cf5741d2a9187db54070cc44cd667"
+    },
+    {
+      "path": "pc-tools/marked_route_report/collect.py",
+      "bytes": 6234,
+      "sha256": "446a8c1a00d4f7c9a3c34dbb193b682fda3c13381eba24bb97accc63df15a5e1"
+    },
+    {
+      "path": "pc-tools/marked_route_report/README.md",
+      "bytes": 2518,
+      "sha256": "109b7f5cba01ad82be858e1ef303fe96a254b061ebd00619fbedb0299bf7a59b"
+    },
+    {
+      "path": "pc-tools/marked_route_report/run_report.py",
+      "bytes": 4679,
+      "sha256": "a7b73f16eae0fbe7c01700d9cb7ebb37f29eae80d00dd258a9e65a10712012cd"
+    },
+    {
+      "path": "pc-tools/marked_route_report/test_report.py",
+      "bytes": 2347,
+      "sha256": "638106e326bde252955a522b55dc18baec041e68328c8e85c6defc743985672c"
+    },
+    {
+      "path": "pc-tools/marked_route_report/verify_browser.cjs",
+      "bytes": 2629,
+      "sha256": "88e58ffac40226c7c4bf5c7b37ff5d551f96df301c4438f63d0c93b3f95c3f0c"
+    },
+    {
+      "path": "pc-tools/motion_dashboard/assets/plotly.min.js",
+      "bytes": 4558696,
+      "sha256": "6d21266ce1bd7d9e5ab4e115989c70c20de0382fd973a8f26ab58619eba4d603"
+    },
+    {
+      "path": "pc-tools/motion_dashboard/collect_run.py",
+      "bytes": 3311,
+      "sha256": "4ce48b6718ee44ded046ba825229294266d214e8cad83a516ede701a7004e7af"
+    },
+    {
+      "path": "pc-tools/motion_dashboard/dashboard.html",
+      "bytes": 15962,
+      "sha256": "507faf242c354f3f449db7cdb602a41bad219daaf2997683ef5e89f82c4fd385"
+    },
+    {
+      "path": "pc-tools/motion_dashboard/model.py",
+      "bytes": 12015,
+      "sha256": "77906dd43ea32cfff70c0e3dfefa56954d502e95ee455d674219f2189ed7917b"
+    },
+    {
+      "path": "pc-tools/motion_dashboard/README.md",
+      "bytes": 4846,
+      "sha256": "97590d00141a3301e6df37f11292549a27ed06e614a25ade45251c96621bf207"
+    },
+    {
+      "path": "pc-tools/motion_dashboard/run_dashboard.py",
+      "bytes": 5280,
+      "sha256": "d3fd025d03485f227a8c199a36a25574dd02f98aa90af4bc7ed5f2824264ff7a"
+    },
+    {
+      "path": "pc-tools/motion_dashboard/test_dashboard.py",
+      "bytes": 6655,
+      "sha256": "20d34466d66800a8652f7db7d9f5d42c86d5abc1cd8ac890ecc06eedaecb4f01"
+    },
+    {
+      "path": "pc-tools/motion_dashboard/verify_browser.cjs",
+      "bytes": 3791,
+      "sha256": "d98d40a352d4c7377d9d6814d4a45d72e883d24d938b8069779dfe368ecd9189"
+    },
+    {
+      "path": "pc-tools/normalize-rviz-config.py",
+      "bytes": 320,
+      "sha256": "4ff9e32321676d186a912f31d715536fba7ff92ad5f6b86fb67c31ac838d8171"
+    },
+    {
+      "path": "pc-tools/open-car-vscode.py",
+      "bytes": 4243,
+      "sha256": "81a9539123c5b17371d0fee89f0eeed43cf1d54236c45c4a97ed7c37a64d8577"
+    },
+    {
+      "path": "pc-tools/pc-rviz-relay.py",
+      "bytes": 9998,
+      "sha256": "954bda19b662d0d3e8830b0dbc37321aa1c8860439db2abeb82dd2041b9c919e"
+    },
+    {
+      "path": "pc-tools/probe-rviz-window.py",
+      "bytes": 3831,
+      "sha256": "bedb0eb3c1532bcd6da62d06dbca3160b09d97474f682dca7c10771fca818a07"
+    },
+    {
+      "path": "pc-tools/racecar_network.py",
+      "bytes": 5293,
+      "sha256": "9bd79e7085eea670b89c9298aec75204892fd3ee35b5f0a766a63513f9e851ba"
+    },
+    {
+      "path": "pc-tools/recover-local-rviz.py",
+      "bytes": 1845,
+      "sha256": "33271871c9796c10b8340ad6b8831594baa97f563324a6786d2a989eba76d4b7"
+    },
+    {
+      "path": "pc-tools/refresh-rviz-network.py",
+      "bytes": 3951,
+      "sha256": "e44b910742c8322cdb512a9a772ac40622ccc683b2b1d7c78b4c7b33d3e4244f"
+    },
+    {
+      "path": "pc-tools/restore-car-rviz.py",
+      "bytes": 3805,
+      "sha256": "67ea479bacfd10b270d0b695c960ff93c955dccbae2c0b0f614da40a38664b7c"
+    },
+    {
+      "path": "pc-tools/ros2-shell.bash",
+      "bytes": 377,
+      "sha256": "0233cfb81d41f03a3aa4a57e0dd32075d5cc7ca6ce08c296e436b0a4092ef1d4"
+    },
+    {
+      "path": "pc-tools/run-rviz.sh",
+      "bytes": 2615,
+      "sha256": "0adbc1dc5750d84f38281e4840154af494fd96f221899ffe92f6140dd963c6f7"
+    },
+    {
+      "path": "pc-tools/run-s-curve-moba.ps1",
+      "bytes": 2488,
+      "sha256": "3a3d450334296296ade5ecd2df3eb03b069974f3d497074a386a28173bb132d6"
+    },
+    {
+      "path": "pc-tools/rviz-light.rviz",
+      "bytes": 2096,
+      "sha256": "a95ce52a294d8a13f49c0fa18b277daf08cf73e8fe3fd833392c9eacd93b0e94"
+    },
+    {
+      "path": "pc-tools/rviz-renderer.conf",
+      "bytes": 156,
+      "sha256": "e9aeecf4ff36e115417d22f9fb84278c4dc0b962f781e1991572c1670567d0cd"
+    },
+    {
+      "path": "pc-tools/rviz_reuse.py",
+      "bytes": 3771,
+      "sha256": "4a0fac60bfd73a2628dea8f5d7111832bdf6db94735f5a8cf1b4caba5afd4902"
+    },
+    {
+      "path": "pc-tools/rviz_windows_focus.py",
+      "bytes": 5055,
+      "sha256": "7f896a3442dc6ee185a4ee05a31db2b343ff85c3907e7fe6eb3578e2b68e95ac"
+    },
+    {
+      "path": "pc-tools/s_path_test/generate.py",
+      "bytes": 4083,
+      "sha256": "bb3501511896ceabd2f97e57b581947ffb8e7613f6f15a24cde1970d14eb7701"
+    },
+    {
+      "path": "pc-tools/s_path_test/preview_record.py",
+      "bytes": 5892,
+      "sha256": "3a65a17c186180dc9dfe286d434a5a036026c8868dac3aa61df306c4dcecbfa9"
+    },
+    {
+      "path": "pc-tools/s_path_test/README.md",
+      "bytes": 2703,
+      "sha256": "87941950169be502c57bd111f6f34473d4d40f3891139591333e7c507d802aea"
+    },
+    {
+      "path": "pc-tools/s_path_test/reference.csv",
+      "bytes": 20825,
+      "sha256": "cf4372eae67a5f130b199c4e7142f91dd0bfcb194340d56dc61e9be6c5ea3925"
+    },
+    {
+      "path": "pc-tools/s_path_test/reference.json",
+      "bytes": 49419,
+      "sha256": "e251e11618c6ac8eb489ae97d6edb03e41bccb00aa929fd0e3212c10810d5d3e"
+    },
+    {
+      "path": "pc-tools/s_path_test/route.py",
+      "bytes": 3357,
+      "sha256": "e6d2ba0e07317697a1b024a54b8c8ed37fdd560154b26b72f1fc767db1c547e0"
+    },
+    {
+      "path": "pc-tools/s_path_test/test_route.py",
+      "bytes": 1836,
+      "sha256": "4586706cd408c7f19926f721a3c820a24d096ce28f01a815b655493d7eb300d5"
+    },
+    {
+      "path": "pc-tools/stop-local-rviz.py",
+      "bytes": 1412,
+      "sha256": "0db7c1a3557468accf7712d8d65633e8925c0e5b32ead761a272a7e96f6c92c8"
+    },
+    {
+      "path": "pc-tools/test-car-rviz-launch.py",
+      "bytes": 1007,
+      "sha256": "1ce7951cf7498eb6f0c67be7b85c979ca0db80666e3211b7874ab771e5934fcd"
+    },
+    {
+      "path": "pc-tools/test-rviz-entrypoints.py",
+      "bytes": 4085,
+      "sha256": "828b9486bd6f00a35e9588e88b92617d3f2e8b401b0ac72cdbebc6e2d4bf4515"
+    },
+    {
+      "path": "pc-tools/test_racecar_network.py",
+      "bytes": 2084,
+      "sha256": "dc3045808aca7cdedfc068e1bfa1cb3688d7f7b3f557b0bdd3a056ff0017eeaf"
+    },
+    {
+      "path": "pc-tools/vscode-racecar.tasks.json",
+      "bytes": 1813,
+      "sha256": "2e102b1807e33f34b10546cd5fe0f99873f0386df5ee3e59b669dc7f2a4f0b3d"
+    }
+  ]
+}

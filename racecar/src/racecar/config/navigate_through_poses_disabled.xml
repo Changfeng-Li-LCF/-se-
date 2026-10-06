@@ -1,0 +1,10 @@
+<!--
+  The lean live-SLAM trial only offers NavigateToPose. Humble instantiates both
+  navigator trees while activating; explicitly reject unused multi-goal requests
+  without depending on, or executing, recovery motion actions.
+-->
+<root main_tree_to_execute="MainTree">
+  <BehaviorTree ID="MainTree">
+    <AlwaysFailure/>
+  </BehaviorTree>
+</root>

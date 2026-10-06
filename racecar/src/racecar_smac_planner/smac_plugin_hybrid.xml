@@ -1,0 +1,5 @@
+<library path="racecar_smac_planner">
+	<class name="racecar_smac_planner/SmacPlannerHybrid" type="racecar_smac_planner::SmacPlannerHybrid" base_class_type="nav2_core::GlobalPlanner">
+	  <description>Hybrid-A* SMAC planner</description>
+	</class>
+</library>

@@ -1,0 +1,22 @@
+<!-- Fixed-map ordered route: ordinary asynchronous replanning is capped at 2 Hz.
+     The target source is an ordered array, rather than frontier goal updates.
+     No Spin, BackUp, per-waypoint wait, or automatic emergency-stop reset. -->
+<root main_tree_to_execute="MainTree">
+  <BehaviorTree ID="MainTree">
+    <PipelineSequence name="MarkedRouteWithReplanning">
+      <RateController hz="2.0">
+        <ReactiveSequence name="PlanRemainingOrderedGoals">
+          <RemovePassedGoals input_goals="{goals}" output_goals="{goals}" radius="0.7" global_frame="map" robot_base_frame="base_footprint"/>
+          <Fallback name="ReplaceRouteOnlyOnSuccess">
+            <Sequence>
+              <ComputePathThroughPoses goals="{goals}" path="{candidate_path}" planner_id="GridBased"/>
+              <CommitMarkedPath goals="{goals}" candidate="{candidate_path}" path="{path}" committed_goals="{committed_goals}"/>
+            </Sequence>
+            <RetainValidMarkedPath goals="{goals}" committed_goals="{committed_goals}" path="{path}" service_name="is_path_valid"/>
+          </Fallback>
+        </ReactiveSequence>
+      </RateController>
+      <FollowPath path="{path}" controller_id="FollowPath" goal_checker_id="goal_checker"/>
+    </PipelineSequence>
+  </BehaviorTree>
+</root>

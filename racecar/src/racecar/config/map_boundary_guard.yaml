@@ -1,0 +1,11 @@
+map_boundary_guard:
+  ros__parameters:
+    require_map: false
+    require_map_updates: false
+    map_timeout_s: 3.0
+    tf_timeout_s: 0.3
+    state_timeout_s: 0.5
+    reaction_time_s: 0.6
+    forward_margin_m: 0.15
+    footprint_padding_m: 0.05
+    check_frequency_hz: 20.0

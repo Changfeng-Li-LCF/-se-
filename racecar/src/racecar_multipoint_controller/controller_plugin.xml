@@ -1,0 +1,12 @@
+<library path="racecar_multipoint_controller">
+  <class name="racecar_multipoint_controller::MultiPointController"
+         type="racecar_multipoint_controller::MultiPointController"
+         base_class_type="nav2_core::Controller">
+    <description>Ordered single preview with progress-gated endpoint completion.</description>
+  </class>
+  <class name="racecar_multipoint_controller::OrderedGoalChecker"
+         type="racecar_multipoint_controller::OrderedGoalChecker"
+         base_class_type="nav2_core::GoalChecker">
+    <description>Requires ordered robot progress to reach the final path section before testing endpoint tolerances.</description>
+  </class>
+</library>

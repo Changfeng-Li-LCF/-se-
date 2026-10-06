@@ -1,0 +1,5 @@
+<library path="racecar_smac_planner_lattice">
+	<class name="racecar_smac_planner/SmacPlannerLattice" type="racecar_smac_planner::SmacPlannerLattice" base_class_type="nav2_core::GlobalPlanner">
+	  <description>State Lattice SMAC planner</description>
+	</class>
+</library>

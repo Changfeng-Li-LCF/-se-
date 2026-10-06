@@ -1,0 +1,18 @@
+<!--
+  Single-goal continuous replanning for the lean live-SLAM trial.
+  Each plan starts from the current robot pose. The last valid plan continues
+  during a new ComputePathToPose request; FollowPath receives replacements.
+  RateController requests at most 10 Hz (slow requests never overlap).
+  A planning/control failure ends the task. Collision stopping remains enabled
+  in the controller. No automatic Spin, BackUp, costmap clearing or retry.
+-->
+<root main_tree_to_execute="MainTree">
+  <BehaviorTree ID="MainTree">
+    <PipelineSequence name="NavigateWithLiveReplanning">
+      <RateController hz="10.0">
+        <ComputePathToPose goal="{goal}" path="{path}" planner_id="GridBased"/>
+      </RateController>
+      <FollowPath path="{path}" controller_id="FollowPath" goal_checker_id="goal_checker"/>
+    </PipelineSequence>
+  </BehaviorTree>
+</root>

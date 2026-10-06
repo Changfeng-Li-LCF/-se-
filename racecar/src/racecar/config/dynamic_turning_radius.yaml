@@ -1,0 +1,12 @@
+speed_dependent_turning_radius:
+  ros__parameters:
+    # Shared map-first geometric bound; speed-dependent updater is not launched.
+    minimum_turning_radius_m: 0.6
+    # Initial tuning assumption, not a measured tire/road limit.
+    lateral_accel_limit_mps2: 0.8
+    update_period_s: 0.5
+    radius_step_m: 0.05
+    decrease_hysteresis_m: 0.1
+    speed_release_tau_s: 0.5
+    planner_node: planner_server
+    planner_id: GridBased

@@ -1,0 +1,24 @@
+键盘遥控
+    davinci-mini@davinci-mini:~$ bash racecar/car.sh 
+    
+
+
+
+docker run -it \
+  --name car_v1.0 \
+  --network host \
+  -v /home/bianbu/workspace:/workspace \
+  jialog/ros2_riscv_base:humble \
+  /bin/bash
+
+
+
+
+
+
+docker start car_v1.0
+docker exec -it -w /workspace car_v1.0 /bin/bash
+
+
+
+colcon build --packages-select racecar_driver --symlink-install

@@ -1,0 +1,111 @@
+Panels:
+  - Class: rviz_common/Displays
+    Name: Displays
+  - Class: rviz_common/Views
+    Name: Views
+Visualization Manager:
+  Class: ""
+  Global Options:
+    Background Color: 42; 46; 50
+    Fixed Frame: map
+    Frame Rate: 30
+  Displays:
+    - Class: rviz_default_plugins/Map
+      Name: Saved map
+      Enabled: true
+      Topic:
+        Value: /map
+        Durability Policy: Transient Local
+        Reliability Policy: Reliable
+        History Policy: Keep Last
+        Depth: 1
+      Alpha: 1
+      Color Scheme: map
+    - Class: rviz_default_plugins/Grid
+      Name: Metric grid
+      Enabled: true
+      Cell Size: 1
+      Plane Cell Count: 30
+      Color: 150; 160; 175
+      Alpha: 0.3
+    - Class: rviz_default_plugins/Path
+      Name: Initial planned route
+      Enabled: true
+      Topic:
+        Value: /live_slam_initial_plan
+        Durability Policy: Transient Local
+        Reliability Policy: Reliable
+        Depth: 1
+        History Policy: Keep Last
+      Color: 100; 170; 255
+      Line Style: Lines
+      Line Width: 0.025
+    - Class: rviz_default_plugins/Path
+      Name: Current replanned path
+      Enabled: true
+      Topic:
+        Value: /plan
+        Reliability Policy: Best Effort
+        Durability Policy: Volatile
+        Depth: 1
+        History Policy: Keep Last
+      Color: 0; 220; 220
+      Line Style: Lines
+      Line Width: 0.035
+    - Class: rviz_default_plugins/Path
+      Name: Actual path in map coordinates
+      Enabled: true
+      Topic:
+        Value: /live_slam_actual_path
+        Durability Policy: Transient Local
+        Reliability Policy: Reliable
+        Depth: 1
+        History Policy: Keep Last
+      Color: 255; 135; 30
+      Line Style: Lines
+      Line Width: 0.04
+    - Class: rviz_default_plugins/MarkerArray
+      Name: Marked ordered targets
+      Enabled: true
+      Topic:
+        Value: /marked_route/targets
+        Durability Policy: Transient Local
+        Reliability Policy: Reliable
+        Depth: 1
+        History Policy: Keep Last
+    - Class: rviz_default_plugins/LaserScan
+      Name: Live laser
+      Enabled: true
+      Topic:
+        Value: /scan
+        Durability Policy: Volatile
+        Reliability Policy: Best Effort
+        Depth: 1
+        History Policy: Keep Last
+      Style: Points
+      Size (Pixels): 3
+      Color Transformer: FlatColor
+      Color: 40; 235; 80
+      Decay Time: 0
+    - Class: rviz_default_plugins/Axes
+      Name: Vehicle pose
+      Enabled: true
+      Reference Frame: base_footprint
+      Length: 0.5
+      Radius: 0.03
+  Views:
+    Current:
+      Class: rviz_default_plugins/TopDownOrtho
+      Name: Map view
+      Scale: 60
+      X: 7
+      Y: 0.5
+      Angle: 0
+      Target Frame: map
+  Tools:
+    - Class: rviz_default_plugins/Interact
+    - Class: rviz_default_plugins/MoveCamera
+    - Class: rviz_default_plugins/Select
+Window Geometry:
+  Width: 1300
+  Height: 850

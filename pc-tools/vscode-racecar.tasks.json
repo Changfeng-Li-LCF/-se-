@@ -1,0 +1,48 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "小车：同步参数（先 Ctrl+S 保存）",
+      "type": "ssh-shell",
+      "host": "racecar",
+      "workingDirectory": "/home/bianbu/racecar",
+      "command": "bash -lc 'source /opt/ros/humble/setup.bash && source /home/bianbu/racecar/install/setup.bash && python3 /home/bianbu/racecar-control-fix-20260925/apply_trial_profile.py'",
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true
+      }
+    },
+    {
+      "label": "小车：查看运行中的中值和电机限幅",
+      "type": "ssh-shell",
+      "host": "racecar",
+      "workingDirectory": "/home/bianbu/racecar",
+      "command": "bash -lc 'source /opt/ros/humble/setup.bash && source /home/bianbu/racecar/install/setup.bash && timeout 30s ros2 param get /racecar_driver servo_center_pwm && timeout 30s ros2 param get /racecar_driver motor_min_pwm && timeout 30s ros2 param get /racecar_driver motor_max_pwm'",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true
+      }
+    },
+    {
+      "label": "小车：编译底盘驱动（修改 C++ 后使用）",
+      "type": "ssh-shell",
+      "host": "racecar",
+      "workingDirectory": "/home/bianbu/racecar",
+      "command": "bash -lc 'source /opt/ros/humble/setup.bash && source /home/bianbu/racecar/install/setup.bash && cd /home/bianbu/racecar && colcon build --packages-select racecar_driver'",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true
+      }
+    }
+  ]
+}

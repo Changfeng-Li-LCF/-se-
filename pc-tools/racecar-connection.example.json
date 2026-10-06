@@ -1,0 +1,14 @@
+{
+  "host": "<CAR_IP>",
+  "username": "bianbu",
+  "port": 22,
+  "ssh_identity_file": "<ABSOLUTE_PATH_TO_YOUR_CAR_SSH_PRIVATE_KEY>",
+  "fallback_hosts": [],
+  "auto_discover": true,
+  "discovery_names": [
+    "bianbu.local"
+  ],
+  "discovery_max_subnet_hosts": 254,
+  "verified_host_alias": "racecar-verified",
+  "verified_known_hosts_file": "<ABSOLUTE_PATH_TO_YOUR_VERIFIED_KNOWN_HOSTS_FILE>"
+}

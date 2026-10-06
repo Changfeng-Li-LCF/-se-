@@ -1,0 +1,153 @@
+cmake_minimum_required(VERSION 3.5)
+project(racecar)
+
+# Default to C++14
+if(NOT CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 14)
+endif()
+
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  add_compile_options(-Wall -Wextra -Wpedantic)
+endif()
+
+# Find dependencies
+find_package(ament_cmake REQUIRED)
+find_package(ament_cmake_python REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(rclpy REQUIRED)
+find_package(sensor_msgs REQUIRED)
+find_package(nav_msgs REQUIRED)
+find_package(tf2 REQUIRED)
+find_package(tf2_ros REQUIRED)
+include_directories(${tf2_ros_INCLUDE_DIRS})
+find_package(tf2_geometry_msgs REQUIRED)
+find_package(message_filters REQUIRED)
+find_package(geometry_msgs REQUIRED)
+find_package(std_msgs REQUIRED)
+find_package(visualization_msgs REQUIRED)
+find_package(nav2_amcl REQUIRED)
+find_package(action_msgs REQUIRED)
+find_package(cv_bridge REQUIRED)
+# cartographer_ros 是运行时依赖（launch 文件启动），不需要 find_package
+
+set(dependencies
+  geometry_msgs
+  sensor_msgs
+  rclcpp
+  std_msgs
+  visualization_msgs
+  tf2
+  tf2_ros
+  tf2_geometry_msgs
+  nav_msgs
+  message_filters
+  ament_cmake
+  nav2_amcl 
+  action_msgs
+)
+
+# Include Cpp "include" directory
+include_directories(include)
+
+add_library(scan_motion_native SHARED src/scan_motion_native.cpp)
+target_compile_features(scan_motion_native PRIVATE cxx_std_11)
+target_compile_options(scan_motion_native PRIVATE -O2)
+install(TARGETS scan_motion_native LIBRARY DESTINATION lib)
+
+add_library(scan_motion_imu_runtime SHARED src/scan_motion_imu_runtime.cpp)
+target_compile_options(scan_motion_imu_runtime PRIVATE -O2)
+ament_target_dependencies(scan_motion_imu_runtime rclcpp sensor_msgs)
+install(TARGETS scan_motion_imu_runtime LIBRARY DESTINATION lib)
+
+# Create Cpp executable
+# add_executable(car_controller_new src/car_controller_new.cpp)
+add_executable(laser_2d_new src/laser_2d_new.cpp)
+add_executable(my_car_control_new src/my_car_control_new.cpp)
+add_executable(scan_node src/scan_node.cpp)
+add_executable(car_control_all src/car_control_all.cpp)
+# ament_target_dependencies(car_controller_new ${dependencies})
+ament_target_dependencies(laser_2d_new ${dependencies})
+ament_target_dependencies(my_car_control_new ${dependencies})
+ament_target_dependencies(scan_node ${dependencies})
+ament_target_dependencies(car_control_all ${dependencies})
+
+# Install Cpp executables
+install(TARGETS
+#  car_controller_new
+  laser_2d_new
+  my_car_control_new
+  scan_node
+  car_control_all
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+# Install Python modules
+ament_python_install_package(${PROJECT_NAME})
+
+# Install Python executables
+install(PROGRAMS
+  scripts/cartographer_odom_bridge.py
+  scripts/scan_motion_odometry.py
+  scripts/map_boundary_guard.py
+  scripts/stop_report_recorder.py
+  scripts/speed_dependent_turning_radius.py
+  DESTINATION lib/${PROJECT_NAME}
+)
+install(PROGRAMS
+  scripts/racecar_teleop.py
+  DESTINATION lib/${PROJECT_NAME}
+)
+install(PROGRAMS
+  scripts/get.py
+  DESTINATION lib/${PROJECT_NAME}
+)
+install(PROGRAMS
+  scripts/detct.py
+  DESTINATION lib/${PROJECT_NAME}
+)
+install(PROGRAMS
+  scripts/go.py
+  DESTINATION lib/${PROJECT_NAME}
+)
+install(PROGRAMS
+    scripts/line_follow.py 
+    DESTINATION lib/${PROJECT_NAME}
+)
+install(PROGRAMS
+    scripts/line_follow2.py 
+    DESTINATION lib/${PROJECT_NAME}
+)
+install(PROGRAMS
+    scripts/zhuitong.py 
+    DESTINATION lib/${PROJECT_NAME}
+)
+install(DIRECTORY
+  config
+  DESTINATION share/${PROJECT_NAME}
+)
+install(DIRECTORY
+  maps
+  DESTINATION share/${PROJECT_NAME}
+)
+install(DIRECTORY
+  launch
+  DESTINATION share/${PROJECT_NAME}
+)
+
+install(DIRECTORY
+  map
+  DESTINATION share/${PROJECT_NAME}
+)
+
+install(DIRECTORY
+  rviz
+  DESTINATION share/${PROJECT_NAME}
+)
+
+install(PROGRAMS
+  scripts/site_map.sh
+  scripts/save_site_map.py
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+ament_package()
